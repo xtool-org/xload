@@ -3,7 +3,9 @@ on:
     tags:
       - "v*"
 jobs:
-  build:
+  release:
+    env:
+      GH_TOKEN: ${{ github.token }}
     runs-on: macos-26
     steps:
       - name: Checkout
