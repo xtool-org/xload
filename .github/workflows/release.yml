@@ -18,5 +18,5 @@ jobs:
       - name: Create and publish release
         run: |
           TAG="${{ github.ref_name }}"
-          gh release create "$TAG" --draft --title "v$TAG"
+          gh release create "$TAG" --draft --title "$TAG"
           gh release upload "$TAG" out/*.dylib
