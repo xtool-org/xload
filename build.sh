@@ -8,7 +8,7 @@ mkdir -p out
 function build {
     echo "Building for $1..."
     "$(xcrun -f swift)" build -c release --product XLoadDynamic --swift-sdk "$1"
-    cp -a ".build/$1/release/libXLoadDynamic.dylib" "out/libXLoadDynamic.$2.dylib"
+    cp -a ".build/$1/release/libXLoadDynamic.dylib" "out/libXLoad.$2.dylib"
 }
 
 build arm64-apple-ios-simulator "iphonesimulator"
