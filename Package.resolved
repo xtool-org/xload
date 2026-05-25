@@ -1,0 +1,51 @@
+{
+  "originHash" : "719e2a9c2073e0d449a81e92369494d7d9ac5a83957a66f5e497424604465b76",
+  "pins" : [
+    {
+      "identity" : "dlkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/johnno1962/DLKit",
+      "state" : {
+        "revision" : "966a6ae1d242a9932faf848aaa0291037f316446",
+        "version" : "3.5.7"
+      }
+    },
+    {
+      "identity" : "fishhook",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/johnno1962/fishhook",
+      "state" : {
+        "revision" : "2506520d827ff3f8b5fec800797e10f9b6ef92f5",
+        "version" : "1.2.1"
+      }
+    },
+    {
+      "identity" : "injectionlite",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/xtool-org/InjectionLite",
+      "state" : {
+        "branch" : "debug-trait",
+        "revision" : "de432d8fd7600993d8898e70c5f62fc84a06235e"
+      }
+    },
+    {
+      "identity" : "popen",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/johnno1962/Popen",
+      "state" : {
+        "revision" : "88234d2a067b277dab3c7d3a74210205f0b92962",
+        "version" : "2.2.1"
+      }
+    },
+    {
+      "identity" : "swiftregex5",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/johnno1962/SwiftRegex5",
+      "state" : {
+        "revision" : "84c3fa9a180b2c02e65e9a61287445b0482a5efe",
+        "version" : "6.3.0"
+      }
+    }
+  ],
+  "version" : 3
+}
