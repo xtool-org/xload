@@ -6,6 +6,8 @@ jobs:
   release:
     env:
       GH_TOKEN: ${{ github.token }}
+    permissions:
+      contents: write
     runs-on: macos-26
     steps:
       - name: Checkout
