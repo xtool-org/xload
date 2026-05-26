@@ -1,5 +1,5 @@
 {
-  "originHash" : "719e2a9c2073e0d449a81e92369494d7d9ac5a83957a66f5e497424604465b76",
+  "originHash" : "c293f4c78cf631fd248fb31d7664f61c5c3618d0bfbfcf862e6f3712bb8925d3",
   "pins" : [
     {
       "identity" : "dlkit",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "966a6ae1d242a9932faf848aaa0291037f316446",
         "version" : "3.5.7"
+      }
+    },
+    {
+      "identity" : "ellekit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kabiroberai/ellekit",
+      "state" : {
+        "branch" : "swiftpm-fixes",
+        "revision" : "3468e6b2261f059c784c6d37ac3425671c018a1d"
       }
     },
     {
