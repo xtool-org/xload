@@ -62,7 +62,7 @@ actor FileReloader {
             return
         }
         loader.sweeper.sweepAndRunTests(image: image, classes: classes)
-        await InjectionWatcher.shared.bump()
+        InjectionWatcher.shared.bump()
     }
 }
 
