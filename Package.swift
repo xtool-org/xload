@@ -5,8 +5,8 @@ import PackageDescription
 let package = Package(
     name: "xload",
     platforms: [
-        .macOS(.v14),
-        .iOS(.v17),
+        .macOS(.v15),
+        .iOS(.v18),
     ],
     products: [
         .library(
@@ -25,6 +25,10 @@ let package = Package(
             branch: "debug-trait",
             traits: [], // disable DEBUG_ONLY
         ),
+        .package(
+            url: "https://github.com/kabiroberai/ellekit",
+            branch: "swiftpm-fixes",
+        ),
     ],
     targets: [
         .target(
@@ -35,6 +39,7 @@ let package = Package(
             dependencies: [
                 "CXLoad",
                 .product(name: "InjectionImpl", package: "InjectionLite"),
+                .product(name: "ellekit", package: "ellekit"),
             ]
         ),
     ],

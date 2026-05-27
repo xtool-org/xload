@@ -16,9 +16,21 @@ import System
 }
 
 private func load() async throws {
-    guard let watchPath = ProcessInfo.processInfo.environment["XLOAD_WATCH_DIR"] else {
-        throw StringError("Did not receive XLOAD_WATCH_DIR")
-    }
+    loadInterceptor()
+    try await loadWatcher()
+}
+
+private func loadInterceptor() {
+    guard ProcessInfo.processInfo.environment["XLOAD_INTERCEPT"] == "1" else { return }
+    print("[XLoad] Loading interceptor...")
+    SwiftUIInterceptor.install()
+}
+
+private func loadWatcher() async throws {
+    guard let watchPath = ProcessInfo.processInfo.environment["XLOAD_WATCH_DIR"]
+        else { return }
+
+    print("[XLoad] Loading watcher...")
 
     let changes = try await watchDirectory(watchPath)
 
