@@ -7,16 +7,34 @@ enum SwiftUIInterceptor {
     fileprivate typealias CGetValue = @convention(c) (UInt32, UInt32, UnsafeRawPointer?) -> AGValue
 
     static func install() {
-        let target = dlsym(dlopen(nil, 0), "AGGraphGetValue")!
+        guard let attributeGraph = dlopen(
+            "/System/Library/PrivateFrameworks/AttributeGraph.framework/AttributeGraph",
+            RTLD_LAZY
+        ) else {
+            print("[XLoad] Could not install interceptor: failed to load AttributeGraph.framework")
+            return
+        }
+
+        guard let AGGraphGetValue = dlsym(attributeGraph, "AGGraphGetValue") else {
+            print("[XLoad] Could not install interceptor: failed to find AGGraphGetValue")
+            return
+        }
+
         let hooked = unsafeBitCast(hookedGetValue as CGetValue, to: UnsafeMutableRawPointer.self)
 
-        _orig.withLock {
+        let success = _orig.withLock {
             // we have to hook inside the lock otherwise there's
             // a brief period between when we install the hook and
             // when we set orig. if someone calls AGGraphGetValue during that time,
             // we'll crash.
-            let res = ellekit::hook(target, hooked)
+            guard let res = ellekit::hook(AGGraphGetValue, hooked) else { return false }
             $0 = unsafeBitCast(res, to: CGetValue.self)
+            return true
+        }
+
+        guard success else {
+            print("[XLoad] Could not install interceptor: failed to apply hook")
+            return
         }
     }
 
