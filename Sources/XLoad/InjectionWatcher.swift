@@ -33,23 +33,31 @@ enum SwiftUIInterceptor {
     // AGGraphGetValue is called on basically every view render (afaict; I hope).
     // by registering an Observation access in this method, we make it so any time
     // we call bump(), it triggers an update on every SwiftUI view in the app.
-    InjectionWatcher.shared.observe()
+    InjectionWatcher.shared.subscribe()
     let origFunc = SwiftUIInterceptor.orig
     return origFunc(attribute, options, type)
 }
 
-struct InjectionWatcher: Observable, Sendable {
+private struct InjectionWatcher: Observable, Sendable {
     private let registrar = ObservationRegistrar()
 
     static let shared = InjectionWatcher()
 
-    private init() {}
-
-    func observe() {
-        registrar.access(self, keyPath: \.registrar)
+    private init() {
+        Task { [self] in await watch() }
     }
 
-    func bump() {
-        registrar.withMutation(of: self, keyPath: \.registrar) {}
+    private func watch() async {
+        for await _ in NotificationCenter.default.notifications(named: .init("INJECTION_BUNDLE_NOTIFICATION")) {
+            notify()
+        }
+    }
+
+    private func notify() {
+        registrar.withMutation(of: self, keyPath: \.self) {}
+    }
+
+    func subscribe() {
+        registrar.access(self, keyPath: \.self)
     }
 }

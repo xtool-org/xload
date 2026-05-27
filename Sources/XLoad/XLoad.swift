@@ -16,11 +16,21 @@ import System
 }
 
 private func load() async throws {
-    guard let watchPath = ProcessInfo.processInfo.environment["XLOAD_WATCH_DIR"] else {
-        throw StringError("Did not receive XLOAD_WATCH_DIR")
-    }
+    loadInterceptor()
+    try await loadWatcher()
+}
 
+private func loadInterceptor() {
+    guard ProcessInfo.processInfo.environment["XLOAD_INTERCEPT"] == "1" else { return }
+    print("[XLoad] Loading interceptor...")
     SwiftUIInterceptor.install()
+}
+
+private func loadWatcher() async throws {
+    guard let watchPath = ProcessInfo.processInfo.environment["XLOAD_WATCH_DIR"]
+        else { return }
+
+    print("[XLoad] Loading watcher...")
 
     let changes = try await watchDirectory(watchPath)
 
@@ -56,13 +66,12 @@ private func watchDirectory(_ path: String) async throws -> AsyncStream<Void> {
 actor FileReloader {
     private var loader = Reloader()
 
-    func reload(_ dylib: String) async {
+    func reload(_ dylib: String) {
         guard let (image, classes) = loader.loadAndPatch(in: dylib) else {
             print("[XLoad] Failed to load image: \(dylib)")
             return
         }
         loader.sweeper.sweepAndRunTests(image: image, classes: classes)
-        InjectionWatcher.shared.bump()
     }
 }
 
