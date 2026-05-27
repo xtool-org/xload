@@ -1,5 +1,5 @@
 {
-  "originHash" : "c293f4c78cf631fd248fb31d7664f61c5c3618d0bfbfcf862e6f3712bb8925d3",
+  "originHash" : "5395e166b534ffa2d34700352867c38c1a52b93b448867c6fee3010740e060f2",
   "pins" : [
     {
       "identity" : "dlkit",
@@ -16,7 +16,7 @@
       "location" : "https://github.com/kabiroberai/ellekit",
       "state" : {
         "branch" : "swiftpm-fixes",
-        "revision" : "3468e6b2261f059c784c6d37ac3425671c018a1d"
+        "revision" : "c04bb3f54474623e2a6a7bf1f5a7cf12e7328846"
       }
     },
     {
