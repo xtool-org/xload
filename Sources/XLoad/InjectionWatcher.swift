@@ -1,62 +1,6 @@
 import Foundation
-import CXLoad
-import Synchronization
-import ellekit
 
-enum SwiftUIInterceptor {
-    fileprivate typealias CGetValue = @convention(c) (UInt32, UInt32, UnsafeRawPointer?) -> AGValue
-
-    static func install() {
-        guard let attributeGraph = dlopen(
-            "/System/Library/PrivateFrameworks/AttributeGraph.framework/AttributeGraph",
-            RTLD_LAZY
-        ) else {
-            print("[XLoad] Could not install interceptor: failed to load AttributeGraph.framework")
-            return
-        }
-
-        guard let AGGraphGetValue = dlsym(attributeGraph, "AGGraphGetValue") else {
-            print("[XLoad] Could not install interceptor: failed to find AGGraphGetValue")
-            return
-        }
-
-        let hooked = unsafeBitCast(hookedGetValue as CGetValue, to: UnsafeMutableRawPointer.self)
-
-        let success = _orig.withLock {
-            // we have to hook inside the lock otherwise there's
-            // a brief period between when we install the hook and
-            // when we set orig. if someone calls AGGraphGetValue during that time,
-            // we'll crash.
-            guard let res = ellekit::hook(AGGraphGetValue, hooked) else { return false }
-            $0 = unsafeBitCast(res, to: CGetValue.self)
-            return true
-        }
-
-        guard success else {
-            print("[XLoad] Could not install interceptor: failed to apply hook")
-            return
-        }
-    }
-
-    fileprivate static let _orig = Mutex<CGetValue?>(nil)
-    // "upgrades" the mutex to an atomic. safe because we never read it before it's set.
-    fileprivate static let orig = SwiftUIInterceptor._orig.withLock(\.self)!
-}
-
-@c private func hookedGetValue(
-    _ attribute: UInt32,
-    _ options: UInt32,
-    _ type: UnsafeRawPointer?,
-) -> AGValue {
-    // AGGraphGetValue is called on basically every view render (afaict; I hope).
-    // by registering an Observation access in this method, we make it so any time
-    // we call notify(), it triggers an update on every SwiftUI view in the app.
-    InjectionWatcher.shared.subscribe()
-    let origFunc = SwiftUIInterceptor.orig
-    return origFunc(attribute, options, type)
-}
-
-private struct InjectionWatcher: Observable, Sendable {
+struct InjectionWatcher: Observable, Sendable {
     private let registrar = ObservationRegistrar()
 
     static let shared = InjectionWatcher()
