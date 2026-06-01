@@ -42,6 +42,13 @@ let package = Package(
                 .product(name: "ellekit", package: "ellekit"),
             ]
         ),
+        .executableTarget(
+            name: "XLoadPlayground",
+            dependencies: ["XLoad"],
+            swiftSettings: [
+                .enableExperimentalFeature("OpaqueTypeErasure"),
+            ]
+        ),
     ],
     swiftLanguageModes: [.v6]
 )
